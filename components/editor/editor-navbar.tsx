@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 
 interface EditorNavbarProps {
@@ -35,7 +36,9 @@ export function EditorNavbar({ isOpen, onToggle, toggleRef }: EditorNavbarProps)
       <div className="flex flex-1 items-center justify-center" />
 
       {/* Right section */}
-      <div className="flex items-center" />
+      <div className="flex items-center px-1">
+        <UserButton />
+      </div>
     </header>
   )
 }
