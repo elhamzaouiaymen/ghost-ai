@@ -18,6 +18,7 @@ interface ProjectSidebarProps {
 export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
   return (
     <div
+      inert={!isOpen}
       className={cn(
         "fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-border-default bg-bg-surface transition-transform duration-300 ease-in-out",
         isOpen ? "translate-x-0" : "-translate-x-full"
