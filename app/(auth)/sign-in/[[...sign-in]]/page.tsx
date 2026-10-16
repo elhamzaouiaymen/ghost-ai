@@ -3,7 +3,7 @@ import { Suspense } from "react"
 
 export default function SignInPage() {
   return (
-    <div className="flex w-full max-w-4xl overflow-hidden rounded-2xl border border-border-default shadow-2xl">
+    <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl border border-border-default shadow-2xl">
       {/* Left panel — gradient, hidden on small screens */}
       <div
         className="relative hidden lg:flex lg:w-5/12 flex-col justify-between overflow-hidden p-8"
