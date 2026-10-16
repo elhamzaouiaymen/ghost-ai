@@ -43,7 +43,7 @@ export default function RootLayout({
         },
         elements: {
           socialButtonsBlockButtonText: { color: "#ffffff" },
-          userButtonPopoverActionButtonText: { color: "#ffffff" },
+          userButtonPopoverActionButton: { color: "#ffffff" },
           userButtonPopoverActionButtonIcon: { color: "#ffffff" },
         },
       }}
