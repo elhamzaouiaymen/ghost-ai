@@ -41,6 +41,9 @@ export default function RootLayout({
           colorNeutral: "var(--bg-elevated)",
           colorShimmer: "var(--bg-elevated)",
         },
+        elements: {
+          socialButtonsBlockButtonText: { color: "#ffffff" },
+        },
       }}
     >
       <html
