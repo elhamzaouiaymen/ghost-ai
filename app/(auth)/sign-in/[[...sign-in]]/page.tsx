@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/nextjs"
+import { Suspense } from "react"
 
 export default function SignInPage() {
   return (
@@ -22,7 +23,9 @@ export default function SignInPage() {
 
       {/* Right panel — Clerk form */}
       <div className="flex flex-1 items-center justify-center px-6 py-12">
-        <SignIn />
+        <Suspense>
+          <SignIn />
+        </Suspense>
       </div>
     </div>
   )
