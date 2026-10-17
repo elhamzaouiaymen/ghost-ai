@@ -15,24 +15,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-
-interface MockProject {
-  id: string
-  name: string
-  slug: string
-}
-
-const MOCK_PROJECTS: MockProject[] = [
-  { id: "1", name: "My First Architecture", slug: "my-first-architecture" },
-  { id: "2", name: "E-Commerce Platform", slug: "e-commerce-platform" },
-]
+import type { Project } from "@prisma/client"
 
 interface ProjectSidebarProps {
   isOpen: boolean
   onClose: () => void
   onOpenCreate: () => void
-  onOpenRename: (project: MockProject) => void
-  onOpenDelete: (project: MockProject) => void
+  onOpenRename: (project: Project) => void
+  onOpenDelete: (project: Project) => void
+  ownedProjects: Project[]
+  sharedProjects: Project[]
 }
 
 export function ProjectSidebar({
@@ -41,6 +33,8 @@ export function ProjectSidebar({
   onOpenCreate,
   onOpenRename,
   onOpenDelete,
+  ownedProjects,
+  sharedProjects,
 }: ProjectSidebarProps) {
   return (
     <div
@@ -77,39 +71,54 @@ export function ProjectSidebar({
           </TabsList>
 
           <TabsContent value="my-projects" className="mt-2 flex flex-1 flex-col gap-1 overflow-y-auto">
-            {MOCK_PROJECTS.map((project) => (
-              <div
-                key={project.id}
-                className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
-              >
-                <span className="truncate text-sm text-copy-primary">{project.name}</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:outline-none"
-                    aria-label="Project actions"
-                  >
-                    <MoreHorizontal className="size-3.5" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-36">
-                    <DropdownMenuItem onClick={() => onOpenRename(project)}>
-                      <Pencil className="mr-2 size-3.5" />
-                      Rename
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => onOpenDelete(project)}
-                      className="text-destructive focus:text-destructive"
+            {ownedProjects.length === 0 ? (
+              <span className="py-4 text-center text-sm text-copy-muted">No projects yet</span>
+            ) : (
+              ownedProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                >
+                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:outline-none"
+                      aria-label="Project actions"
                     >
-                      <Trash2 className="mr-2 size-3.5" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            ))}
+                      <MoreHorizontal className="size-3.5" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-36">
+                      <DropdownMenuItem onClick={() => onOpenRename(project)}>
+                        <Pencil className="mr-2 size-3.5" />
+                        Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onOpenDelete(project)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash2 className="mr-2 size-3.5" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ))
+            )}
           </TabsContent>
 
-          <TabsContent value="shared" className="flex flex-1 items-center justify-center">
-            <span className="text-sm text-copy-muted">No projects yet</span>
+          <TabsContent value="shared" className="mt-2 flex flex-1 flex-col gap-1 overflow-y-auto">
+            {sharedProjects.length === 0 ? (
+              <span className="py-4 text-center text-sm text-copy-muted">No projects yet</span>
+            ) : (
+              sharedProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                >
+                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                </div>
+              ))
+            )}
           </TabsContent>
         </Tabs>
       </div>
