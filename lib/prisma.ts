@@ -9,7 +9,7 @@ function createClient() {
   if (DATABASE_URL?.startsWith("prisma+postgres://")) {
     return new PrismaClient({ accelerateUrl: DATABASE_URL }).$extends(withAccelerate());
   }
-  const pool = new Pool({ connectionString: DATABASE_URL });
+  const pool = new Pool({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: true } });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
