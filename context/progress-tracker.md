@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Feature 05: complete — awaiting database to apply migration
+- Feature 06: complete
 
 ## Completed
 
@@ -18,6 +18,7 @@ change.
 - **03-auth**: proxy.ts (Next.js 16 route protection), ClerkProvider with dark theme and CSS vars, sign-in/sign-up two-panel pages, editor layout wrapping EditorShell, root page auth redirect, UserButton in editor navbar.
 - **04-project-dialogs**: Editor home screen with "New project" button; Create/Rename/Delete dialogs; sidebar project list with per-item rename/delete actions; `useProjectDialogs` hook for dialog/form/loading state; `EditorDialogsContext` so editor page can open the create dialog; zero TS errors, zero lint errors.
 - **05-prisma**: `prisma/schema.prisma` (datasource + generator), `prisma/models/project.prisma` (Project + ProjectCollaborator with all indexes and cascade delete), `lib/prisma.ts` singleton (branches on `prisma+postgres://` vs pg adapter), Prisma 8 ORM setup with `@prisma/orm-postgres`, contract emitted to `src/prisma/`, migration package planned in `migrations/app/20261017T0102_init_projects`; `yarn build` passes.
+- **06-project-api**: `app/api/projects/route.ts` (GET list + POST create), `app/api/projects/[projectId]/route.ts` (PATCH rename + DELETE delete); Clerk `auth()` for identity; 401 unauthenticated, 403 non-owner, 404 missing; default name `"Untitled Project"`; backend only.
 
 ## In Progress
 

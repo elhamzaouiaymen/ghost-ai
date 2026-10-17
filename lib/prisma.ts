@@ -16,10 +16,10 @@ function createClient() {
 
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: ReturnType<typeof createClient> | undefined;
+  var prisma: PrismaClient | undefined;
 }
 
-const prisma = globalThis.prisma ?? createClient();
+const prisma = (globalThis.prisma ?? createClient()) as unknown as PrismaClient;
 
 if (process.env.NODE_ENV === "development") {
   globalThis.prisma = prisma;
