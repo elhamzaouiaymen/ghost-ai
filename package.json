@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma skills sync || exit 0 && npx prisma@7 generate --schema=prisma/ || exit 0"
+    "postinstall": "prisma skills sync || exit 0 && (GHOST_ROOT=$(pwd) && cd /tmp && npx prisma@7 generate --schema=\"$GHOST_ROOT/prisma/\") || exit 0"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
