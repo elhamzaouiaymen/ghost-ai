@@ -1,6 +1,6 @@
 "use client"
 
-import { X, Plus } from "lucide-react"
+import { X, Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Tabs,
@@ -8,14 +8,40 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
+
+interface MockProject {
+  id: string
+  name: string
+  slug: string
+}
+
+const MOCK_PROJECTS: MockProject[] = [
+  { id: "1", name: "My First Architecture", slug: "my-first-architecture" },
+  { id: "2", name: "E-Commerce Platform", slug: "e-commerce-platform" },
+]
 
 interface ProjectSidebarProps {
   isOpen: boolean
   onClose: () => void
+  onOpenCreate: () => void
+  onOpenRename: (project: MockProject) => void
+  onOpenDelete: (project: MockProject) => void
 }
 
-export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
+export function ProjectSidebar({
+  isOpen,
+  onClose,
+  onOpenCreate,
+  onOpenRename,
+  onOpenDelete,
+}: ProjectSidebarProps) {
   return (
     <div
       inert={!isOpen}
@@ -50,8 +76,36 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="my-projects" className="flex flex-1 items-center justify-center">
-            <span className="text-sm text-copy-muted">No projects yet</span>
+          <TabsContent value="my-projects" className="mt-2 flex flex-1 flex-col gap-1 overflow-y-auto">
+            {MOCK_PROJECTS.map((project) => (
+              <div
+                key={project.id}
+                className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+              >
+                <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:outline-none"
+                    aria-label="Project actions"
+                  >
+                    <MoreHorizontal className="size-3.5" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-36">
+                    <DropdownMenuItem onClick={() => onOpenRename(project)}>
+                      <Pencil className="mr-2 size-3.5" />
+                      Rename
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => onOpenDelete(project)}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="mr-2 size-3.5" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ))}
           </TabsContent>
 
           <TabsContent value="shared" className="flex flex-1 items-center justify-center">
@@ -63,6 +117,7 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
       {/* Footer */}
       <div className="shrink-0 border-t border-border-default p-3">
         <Button
+          onClick={onOpenCreate}
           className="w-full gap-2 bg-accent-cyan text-[var(--bg-base)] hover:bg-accent-cyan/80"
           size="default"
         >
