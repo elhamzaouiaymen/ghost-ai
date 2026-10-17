@@ -9,19 +9,18 @@ change.
 
 ## Current Goal
 
-- Feature 04 (TBD — see feature-specs/)
+- Feature 04: Project Dialogs (editor home screen + create/rename/delete dialogs + sidebar actions)
 
 ## Completed
 
 - **01-design-system**: shadcn/ui installed (Tailwind v4 mode), components Button/Card/Dialog/Input/Tabs/Textarea/ScrollArea added, lucide-react installed, `lib/utils.ts` with `cn()` helper created, `globals.css` updated with project dark theme tokens and shadcn semantic vars.
 - **02-editor**: `components/editor/editor-navbar.tsx`, `components/editor/project-sidebar.tsx`, and `components/editor/editor-shell.tsx` created. Shell wired into `app/layout.tsx` as the root content wrapper. shadcn Dialog confirmed ready for future use. Zero TS errors, zero lint errors.
 - **03-auth**: proxy.ts (Next.js 16 route protection), ClerkProvider with dark theme and CSS vars, sign-in/sign-up two-panel pages, editor layout wrapping EditorShell, root page auth redirect, UserButton in editor navbar.
+- **04-project-dialogs**: Editor home screen with "New project" button; Create/Rename/Delete dialogs; sidebar project list with per-item rename/delete actions; `useProjectDialogs` hook for dialog/form/loading state; `EditorDialogsContext` so editor page can open the create dialog; zero TS errors, zero lint errors.
 
 ## In Progress
 
 ## Next Up
-
-- Feature 04 (TBD — see feature-specs/)
 
 ## Open Questions
 
