@@ -77,6 +77,7 @@ export function useProjectActions() {
       const project = await res.json()
       closeDialog()
       router.push(`/editor/${project.id}`)
+      router.refresh()
     } catch {
       setIsLoading(false)
     }
@@ -110,6 +111,7 @@ export function useProjectActions() {
       closeDialog()
       if (activeWorkspaceId === activeProject.id) {
         router.push("/editor")
+        router.refresh()
       } else {
         router.refresh()
       }

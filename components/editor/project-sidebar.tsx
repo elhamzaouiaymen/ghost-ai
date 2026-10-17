@@ -82,7 +82,7 @@ export function ProjectSidebar({
                   <span className="truncate text-sm text-copy-primary">{project.name}</span>
                   <DropdownMenu>
                     <DropdownMenuTrigger
-                      className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:outline-none"
+                      className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
                       aria-label="Project actions"
                     >
                       <MoreHorizontal className="size-3.5" />
