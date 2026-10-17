@@ -1,0 +1,28 @@
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { Pool } from "pg";
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+function createClient() {
+  if (DATABASE_URL?.startsWith("prisma+postgres://")) {
+    return new PrismaClient({ accelerateUrl: DATABASE_URL }).$extends(withAccelerate());
+  }
+  const pool = new Pool({ connectionString: DATABASE_URL });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
+}
+
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: ReturnType<typeof createClient> | undefined;
+}
+
+const prisma = globalThis.prisma ?? createClient();
+
+if (process.env.NODE_ENV === "development") {
+  globalThis.prisma = prisma;
+}
+
+export default prisma;

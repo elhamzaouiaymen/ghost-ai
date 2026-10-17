@@ -1,0 +1,356 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "createNativeEnumType.ProjectStatus",
+    "label": "Create enum type \"ProjectStatus\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "type",
+        "name": "ProjectStatus"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "create enum type \"ProjectStatus\"",
+        "sql": "CREATE TYPE \"public\".\"ProjectStatus\" AS ENUM ('DRAFT', 'ARCHIVED')",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.Project",
+    "label": "Create table \"Project\"",
+    "summary": "Creates table \"Project\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Project"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Project\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Project\"",
+        "sql": "CREATE TABLE \"public\".\"Project\" (\n  \"canvasJsonPath\" text,\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"ownerId\" text NOT NULL,\n  \"status\" \"ProjectStatus\" DEFAULT 'DRAFT'::\"ProjectStatus\" NOT NULL,\n  \"updatedAt\" timestamp(3) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Project\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ProjectCollaborator",
+    "label": "Create table \"ProjectCollaborator\"",
+    "summary": "Creates table \"ProjectCollaborator\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ProjectCollaborator"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ProjectCollaborator\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ProjectCollaborator\"",
+        "sql": "CREATE TABLE \"public\".\"ProjectCollaborator\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"projectId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ProjectCollaborator\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Project.Project_createdAt_idx",
+    "label": "Create index \"Project_createdAt_idx\" on \"Project\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Project_createdAt_idx",
+        "table": "Project"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Project_createdAt_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project_createdAt_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Project_createdAt_idx\"",
+        "sql": "CREATE INDEX \"Project_createdAt_idx\" ON \"public\".\"Project\" (\"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Project_createdAt_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project_createdAt_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Project.Project_ownerId_idx",
+    "label": "Create index \"Project_ownerId_idx\" on \"Project\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Project_ownerId_idx",
+        "table": "Project"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Project_ownerId_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project_ownerId_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Project_ownerId_idx\"",
+        "sql": "CREATE INDEX \"Project_ownerId_idx\" ON \"public\".\"Project\" (\"ownerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Project_ownerId_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Project_ownerId_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ProjectCollaborator.ProjectCollaborator_email_idx",
+    "label": "Create index \"ProjectCollaborator_email_idx\" on \"ProjectCollaborator\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ProjectCollaborator_email_idx",
+        "table": "ProjectCollaborator"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ProjectCollaborator_email_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_email_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ProjectCollaborator_email_idx\"",
+        "sql": "CREATE INDEX \"ProjectCollaborator_email_idx\" ON \"public\".\"ProjectCollaborator\" (\"email\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ProjectCollaborator_email_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_email_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ProjectCollaborator.ProjectCollaborator_projectId_createdAt_idx",
+    "label": "Create index \"ProjectCollaborator_projectId_createdAt_idx\" on \"ProjectCollaborator\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ProjectCollaborator_projectId_createdAt_idx",
+        "table": "ProjectCollaborator"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ProjectCollaborator_projectId_createdAt_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_projectId_createdAt_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ProjectCollaborator_projectId_createdAt_idx\"",
+        "sql": "CREATE INDEX \"ProjectCollaborator_projectId_createdAt_idx\" ON \"public\".\"ProjectCollaborator\" (\"projectId\", \"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ProjectCollaborator_projectId_createdAt_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_projectId_createdAt_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ProjectCollaborator.ProjectCollaborator_projectId_email_key",
+    "label": "Create index \"ProjectCollaborator_projectId_email_key\" on \"ProjectCollaborator\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ProjectCollaborator_projectId_email_key",
+        "table": "ProjectCollaborator"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ProjectCollaborator_projectId_email_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_projectId_email_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ProjectCollaborator_projectId_email_key\"",
+        "sql": "CREATE UNIQUE INDEX \"ProjectCollaborator_projectId_email_key\" ON \"public\".\"ProjectCollaborator\" (\"projectId\", \"email\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ProjectCollaborator_projectId_email_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ProjectCollaborator_projectId_email_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ProjectCollaborator.ProjectCollaborator_projectId_fkey",
+    "label": "Add foreign key \"ProjectCollaborator_projectId_fkey\" on \"ProjectCollaborator\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ProjectCollaborator_projectId_fkey",
+        "table": "ProjectCollaborator"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ProjectCollaborator_projectId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ProjectCollaborator_projectId_fkey",
+          "public",
+          "\"public\".\"ProjectCollaborator\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ProjectCollaborator_projectId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ProjectCollaborator\"\nADD CONSTRAINT \"ProjectCollaborator_projectId_fkey\"\nFOREIGN KEY (\"projectId\")\nREFERENCES \"public\".\"Project\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ProjectCollaborator_projectId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ProjectCollaborator_projectId_fkey",
+          "public",
+          "\"public\".\"ProjectCollaborator\""
+        ]
+      }
+    ]
+  }
+]
