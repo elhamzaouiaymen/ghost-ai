@@ -1,12 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { withAccelerate } from "@prisma/extension-accelerate";
 import { Pool } from "pg";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-function createClient(): PrismaClient {
+function createClient() {
   if (DATABASE_URL?.startsWith("prisma+postgres://")) {
-    return new PrismaClient();
+    return new PrismaClient({ accelerateUrl: DATABASE_URL }).$extends(withAccelerate());
   }
   const pool = new Pool({ connectionString: DATABASE_URL });
   const adapter = new PrismaPg(pool);
@@ -15,7 +16,7 @@ function createClient(): PrismaClient {
 
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var prisma: ReturnType<typeof createClient> | undefined;
 }
 
 const prisma = globalThis.prisma ?? createClient();
