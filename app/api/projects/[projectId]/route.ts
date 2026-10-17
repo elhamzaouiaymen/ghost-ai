@@ -15,12 +15,25 @@ export async function PATCH(
   if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (project.ownerId !== userId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const body = await request.json().catch(() => ({}));
-  const name: string = body.name?.trim() || "Untitled Project";
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "Body must be a JSON object" }, { status: 400 });
+  }
+
+  const { name: rawName } = body as Record<string, unknown>;
+  if (typeof rawName !== "string" || !rawName.trim()) {
+    return NextResponse.json({ error: "name is required and must be a non-empty string" }, { status: 400 });
+  }
 
   const updated = await prisma.project.update({
     where: { id: projectId },
-    data: { name },
+    data: { name: rawName.trim() },
   });
 
   return NextResponse.json(updated);
