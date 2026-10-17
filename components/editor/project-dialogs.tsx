@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useProjectDialogs } from "@/hooks/use-project-dialogs"
+import { useProjectActions } from "@/hooks/use-project-actions"
 
-type DialogsProps = ReturnType<typeof useProjectDialogs>
+type DialogsProps = ReturnType<typeof useProjectActions>
 
 export function ProjectDialogs(props: DialogsProps) {
   const {
@@ -49,7 +49,7 @@ export function ProjectDialogs(props: DialogsProps) {
             />
             {createName.trim() && (
               <p className="text-xs text-copy-muted">
-                Slug: <span className="font-mono text-copy-secondary">{createSlug}</span>
+                Room ID: <span className="font-mono text-copy-secondary">{createSlug}</span>
               </p>
             )}
           </div>

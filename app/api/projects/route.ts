@@ -29,15 +29,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Body must be a JSON object" }, { status: 400 });
   }
 
-  const { name: rawName } = body as Record<string, unknown>;
+  const { id: rawId, name: rawName } = body as Record<string, unknown>;
+  if (rawId !== undefined && typeof rawId !== "string") {
+    return NextResponse.json({ error: "id must be a string" }, { status: 400 });
+  }
   if (rawName !== undefined && typeof rawName !== "string") {
     return NextResponse.json({ error: "name must be a string" }, { status: 400 });
   }
 
   const name = typeof rawName === "string" && rawName.trim() ? rawName.trim() : "Untitled Project";
+  const id = typeof rawId === "string" && rawId.trim() ? rawId.trim() : undefined;
 
   const project = await prisma.project.create({
-    data: { ownerId: userId, name },
+    data: { ...(id ? { id } : {}), ownerId: userId, name },
   });
 
   return NextResponse.json(project, { status: 201 });

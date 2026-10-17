@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Feature 06: complete
+- Feature 07: complete
 
 ## Completed
 
@@ -19,6 +19,7 @@ change.
 - **04-project-dialogs**: Editor home screen with "New project" button; Create/Rename/Delete dialogs; sidebar project list with per-item rename/delete actions; `useProjectDialogs` hook for dialog/form/loading state; `EditorDialogsContext` so editor page can open the create dialog; zero TS errors, zero lint errors.
 - **05-prisma**: `prisma/schema.prisma` (datasource + generator), `prisma/models/project.prisma` (Project + ProjectCollaborator with all indexes and cascade delete), `lib/prisma.ts` singleton (branches on `prisma+postgres://` vs pg adapter), Prisma 8 ORM setup with `@prisma/orm-postgres`, contract emitted to `src/prisma/`, migration package planned in `migrations/app/20261017T0102_init_projects`; `yarn build` passes.
 - **06-project-api**: `app/api/projects/route.ts` (GET list + POST create), `app/api/projects/[projectId]/route.ts` (PATCH rename + DELETE delete); Clerk `auth()` for identity; 401 unauthenticated, 403 non-owner, 404 missing; default name `"Untitled Project"`; backend only.
+- **07-wire-editor-home**: `lib/data/projects.ts` (server-side helper fetching owned + shared projects via `currentUser()`); `hooks/use-project-actions.ts` (real API mutations: create with slugify + short suffix → room ID, POST navigates to new workspace; PATCH renames + refreshes; DELETE redirects if active workspace); `app/editor/layout.tsx` fetches projects server-side and passes to `EditorShell`; `EditorShell` swapped to `useProjectActions`; `ProjectSidebar` accepts real `Project[]` props (both tabs live); `ProjectDialogs` typed against `useProjectActions`; create dialog shows Room ID preview; `app/editor/page.tsx` is now a server component with extracted `NewProjectButton` client component; `export const instant = false` on the layout for per-request rendering with `cacheComponents` enabled.
 
 ## In Progress
 
