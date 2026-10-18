@@ -28,6 +28,7 @@ interface ShareDialogProps {
 export function ShareDialog({ projectId, isOwner, open, onOpenChange }: ShareDialogProps) {
   const [collaborators, setCollaborators] = React.useState<Collaborator[]>([])
   const [loading, setLoading] = React.useState(false)
+  const [loadError, setLoadError] = React.useState(false)
   const [inviteEmail, setInviteEmail] = React.useState("")
   const [isInviting, setIsInviting] = React.useState(false)
   const [removingEmail, setRemovingEmail] = React.useState<string | null>(null)
@@ -35,12 +36,29 @@ export function ShareDialog({ projectId, isOwner, open, onOpenChange }: ShareDia
 
   React.useEffect(() => {
     if (!open) return
+    let cancelled = false
     setLoading(true)
+    setLoadError(false)
     fetch(`/api/projects/${projectId}/collaborators`)
-      .then((r) => r.json())
-      .then((data) => setCollaborators(data.collaborators ?? []))
-      .catch(() => setCollaborators([]))
-      .finally(() => setLoading(false))
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to load collaborators")
+        return r.json()
+      })
+      .then((data) => {
+        if (!cancelled) setCollaborators(data.collaborators ?? [])
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCollaborators([])
+          setLoadError(true)
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [open, projectId])
 
   async function handleInvite() {
@@ -66,21 +84,28 @@ export function ShareDialog({ projectId, isOwner, open, onOpenChange }: ShareDia
   async function handleRemove(email: string) {
     setRemovingEmail(email)
     try {
-      await fetch(`/api/projects/${projectId}/collaborators`, {
+      const res = await fetch(`/api/projects/${projectId}/collaborators`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
+      if (!res.ok) return
       setCollaborators((prev) => prev.filter((c) => c.email !== email))
+    } catch {
+      // keep the row on network failure
     } finally {
       setRemovingEmail(null)
     }
   }
 
-  function handleCopyLink() {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  async function handleCopyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // copy failed; do not show "Copied!"
+    }
   }
 
   return (
@@ -117,6 +142,10 @@ export function ShareDialog({ projectId, isOwner, open, onOpenChange }: ShareDia
             <div className="flex items-center justify-center py-6">
               <Loader2 className="size-4 animate-spin text-copy-muted" />
             </div>
+          ) : loadError ? (
+            <p className="py-4 text-center text-sm text-copy-muted">
+              Unable to load collaborators
+            </p>
           ) : collaborators.length === 0 ? (
             <p className="py-4 text-center text-sm text-copy-muted">No collaborators yet</p>
           ) : (
@@ -128,7 +157,7 @@ export function ShareDialog({ projectId, isOwner, open, onOpenChange }: ShareDia
                     className="flex items-center gap-2 rounded-md px-2 py-1.5"
                   >
                     {collab.avatar ? (
-                      // eslint-disable-next-line @next/next-image-prefer-image
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={collab.avatar}
                         alt=""

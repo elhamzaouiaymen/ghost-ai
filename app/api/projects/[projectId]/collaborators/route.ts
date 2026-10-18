@@ -52,7 +52,7 @@ export async function GET(_req: Request, { params }: Params) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
     const collab = await prisma.projectCollaborator.findUnique({
-      where: { projectId_email: { projectId, email: identity.primaryEmail } },
+      where: { projectId_email: { projectId, email: identity.primaryEmail.trim().toLowerCase() } },
     })
     if (!collab) return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
