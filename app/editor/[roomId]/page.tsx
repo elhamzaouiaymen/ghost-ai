@@ -18,5 +18,11 @@ export default async function WorkspacePage({
   const project = await getProjectWithAccess(roomId)
   if (!project) return <AccessDenied />
 
-  return <WorkspaceView projectName={project.name} />
+  return (
+    <WorkspaceView
+      projectId={project.id}
+      projectName={project.name}
+      isOwner={project.ownerId === userId}
+    />
+  )
 }

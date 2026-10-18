@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Feature 08: complete
+- Feature 09: complete
 
 ## Completed
 
@@ -22,6 +22,8 @@ change.
 - **07-wire-editor-home**: `lib/data/projects.ts` (server-side helper fetching owned + shared projects via `currentUser()`); `hooks/use-project-actions.ts` (real API mutations: create with slugify + short suffix → room ID, POST navigates to new workspace; PATCH renames + refreshes; DELETE redirects if active workspace); `app/editor/layout.tsx` fetches projects server-side and passes to `EditorShell`; `EditorShell` swapped to `useProjectActions`; `ProjectSidebar` accepts real `Project[]` props (both tabs live); `ProjectDialogs` typed against `useProjectActions`; create dialog shows Room ID preview; `app/editor/page.tsx` is now a server component with extracted `NewProjectButton` client component; `export const instant = false` on the layout for per-request rendering with `cacheComponents` enabled.
 
 - **08-editor-workspace-shell**: `lib/project-access.ts` (getCurrentIdentity + getProjectWithAccess helpers); `components/editor/access-denied.tsx` (centered lock icon, message, link back to /editor); `app/editor/[roomId]/page.tsx` (server component: auth redirect, access check, workspace layout with workspace navbar showing project name + Share/AI toggle placeholders, canvas placeholder, right sidebar placeholder); `ProjectSidebar` updated with `usePathname` to highlight the active project; zero TS errors.
+
+- **09-share-dialog**: `app/api/projects/[projectId]/collaborators/route.ts` (GET list + POST invite + DELETE remove; owner-only write; owner OR collaborator read; Clerk Backend API enrichment with display name + avatar, fallback to email-only); `components/editor/share-dialog.tsx` (owner: invite input + collaborator list with remove + copy-link button with "Copied!" feedback; collaborator: read-only list; fetch on open); `app/editor/[roomId]/workspace-view.tsx` (Share button wired, isOwner + projectId props added); `app/editor/[roomId]/page.tsx` (passes projectId + isOwner); zero TS errors.
 
 ## In Progress
 
