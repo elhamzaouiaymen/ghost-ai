@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { X, Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,14 +38,18 @@ export function ProjectSidebar({
   ownedProjects,
   sharedProjects,
 }: ProjectSidebarProps) {
+  const pathname = usePathname()
+  const activeId = pathname.startsWith("/editor/") ? pathname.slice("/editor/".length) : null
+
   return (
     <div
       inert={!isOpen}
       className={cn(
-        "fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-border-default bg-bg-surface transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full"
+        "shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out",
+        isOpen ? "w-72" : "w-0"
       )}
     >
+      <div className="flex h-full w-72 flex-col border-r border-border-default bg-bg-surface">
       {/* Header */}
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-border-default px-4">
         <span className="text-sm font-semibold text-copy-primary">Projects</span>
@@ -77,9 +83,17 @@ export function ProjectSidebar({
               ownedProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                  className={cn(
+                    "group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated",
+                    project.id === activeId && "bg-bg-elevated"
+                  )}
                 >
-                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                  <Link
+                    href={`/editor/${project.id}`}
+                    className="min-w-0 flex-1 truncate text-sm text-copy-primary"
+                  >
+                    {project.name}
+                  </Link>
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
@@ -113,9 +127,17 @@ export function ProjectSidebar({
               sharedProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                  className={cn(
+                    "group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated",
+                    project.id === activeId && "bg-bg-elevated"
+                  )}
                 >
-                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                  <Link
+                    href={`/editor/${project.id}`}
+                    className="min-w-0 flex-1 truncate text-sm text-copy-primary"
+                  >
+                    {project.name}
+                  </Link>
                 </div>
               ))
             )}
@@ -133,6 +155,7 @@ export function ProjectSidebar({
           <Plus className="size-4" />
           New Project
         </Button>
+      </div>
       </div>
     </div>
   )
