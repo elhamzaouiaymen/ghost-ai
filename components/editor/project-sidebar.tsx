@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { X, Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,6 +37,9 @@ export function ProjectSidebar({
   ownedProjects,
   sharedProjects,
 }: ProjectSidebarProps) {
+  const pathname = usePathname()
+  const activeId = pathname.startsWith("/editor/") ? pathname.slice("/editor/".length) : null
+
   return (
     <div
       inert={!isOpen}
@@ -77,7 +81,10 @@ export function ProjectSidebar({
               ownedProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                  className={cn(
+                    "group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated",
+                    project.id === activeId && "bg-bg-elevated"
+                  )}
                 >
                   <span className="truncate text-sm text-copy-primary">{project.name}</span>
                   <DropdownMenu>
@@ -113,7 +120,10 @@ export function ProjectSidebar({
               sharedProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated"
+                  className={cn(
+                    "group flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-bg-elevated",
+                    project.id === activeId && "bg-bg-elevated"
+                  )}
                 >
                   <span className="truncate text-sm text-copy-primary">{project.name}</span>
                 </div>
