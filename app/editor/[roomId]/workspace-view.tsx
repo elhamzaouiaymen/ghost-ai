@@ -36,13 +36,7 @@ export function WorkspaceView({ projectName }: WorkspaceViewProps) {
         </div>
 
         {/* Canvas placeholder */}
-        <div
-          className="flex flex-1 items-center justify-center bg-bg-base"
-          style={{
-            backgroundImage: "radial-gradient(circle, var(--border-default) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        >
+        <div className="canvas-dot-grid flex flex-1 items-center justify-center bg-bg-base">
           <span className="text-sm text-copy-muted">Canvas placeholder</span>
         </div>
       </div>

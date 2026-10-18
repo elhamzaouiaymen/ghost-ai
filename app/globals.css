@@ -113,6 +113,13 @@
     --state-warning: #f59e0b;
 }
 
+@layer utilities {
+  .canvas-dot-grid {
+    background-image: radial-gradient(circle, var(--border-default) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
