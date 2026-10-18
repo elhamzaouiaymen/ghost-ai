@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { X, Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -86,7 +87,12 @@ export function ProjectSidebar({
                     project.id === activeId && "bg-bg-elevated"
                   )}
                 >
-                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                  <Link
+                    href={`/editor/${project.id}`}
+                    className="min-w-0 flex-1 truncate text-sm text-copy-primary"
+                  >
+                    {project.name}
+                  </Link>
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       className="inline-flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 group-hover:opacity-100 text-copy-muted hover:bg-bg-base hover:text-copy-primary focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
@@ -125,7 +131,12 @@ export function ProjectSidebar({
                     project.id === activeId && "bg-bg-elevated"
                   )}
                 >
-                  <span className="truncate text-sm text-copy-primary">{project.name}</span>
+                  <Link
+                    href={`/editor/${project.id}`}
+                    className="min-w-0 flex-1 truncate text-sm text-copy-primary"
+                  >
+                    {project.name}
+                  </Link>
                 </div>
               ))
             )}
