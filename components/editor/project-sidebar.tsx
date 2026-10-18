@@ -45,10 +45,11 @@ export function ProjectSidebar({
     <div
       inert={!isOpen}
       className={cn(
-        "fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-border-default bg-bg-surface transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full"
+        "shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out",
+        isOpen ? "w-72" : "w-0"
       )}
     >
+      <div className="flex h-full w-72 flex-col border-r border-border-default bg-bg-surface">
       {/* Header */}
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-border-default px-4">
         <span className="text-sm font-semibold text-copy-primary">Projects</span>
@@ -154,6 +155,7 @@ export function ProjectSidebar({
           <Plus className="size-4" />
           New Project
         </Button>
+      </div>
       </div>
     </div>
   )

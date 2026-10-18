@@ -28,17 +28,19 @@ export function EditorShell({ children, ownedProjects, sharedProjects }: EditorS
     <EditorDialogsContext.Provider value={{ openCreate: dialogs.openCreate }}>
       <div className="flex h-full flex-col">
         <EditorNavbar isOpen={isOpen} onToggle={() => setIsOpen((v) => !v)} toggleRef={toggleRef} />
-        <ProjectSidebar
-          isOpen={isOpen}
-          onClose={handleClose}
-          onOpenCreate={dialogs.openCreate}
-          onOpenRename={dialogs.openRename}
-          onOpenDelete={dialogs.openDelete}
-          ownedProjects={ownedProjects}
-          sharedProjects={sharedProjects}
-        />
+        <div className="flex flex-1 overflow-hidden">
+          <ProjectSidebar
+            isOpen={isOpen}
+            onClose={handleClose}
+            onOpenCreate={dialogs.openCreate}
+            onOpenRename={dialogs.openRename}
+            onOpenDelete={dialogs.openDelete}
+            ownedProjects={ownedProjects}
+            sharedProjects={sharedProjects}
+          />
+          <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
+        </div>
         <ProjectDialogs {...dialogs} />
-        <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
       </div>
     </EditorDialogsContext.Provider>
   )
