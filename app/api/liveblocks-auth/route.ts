@@ -9,8 +9,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const room: string = body?.room;
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const room =
+    typeof body === "object" && body !== null && typeof (body as Record<string, unknown>).room === "string"
+      ? ((body as Record<string, unknown>).room as string).trim()
+      : "";
+
+  if (!room) {
+    return NextResponse.json({ error: "room is required" }, { status: 400 });
+  }
 
   const project = await getProjectWithAccess(room);
   if (!project) {

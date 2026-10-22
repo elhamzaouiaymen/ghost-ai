@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useNodes, useReactFlow } from "@xyflow/react"
 import type { CanvasNode } from "@/types/canvas"
 
@@ -24,11 +25,32 @@ export function NodePropertiesPanel({ nodeId }: NodePropertiesPanelProps) {
   const { updateNodeData, updateNode } = useReactFlow()
 
   const node = nodes.find((n) => n.id === nodeId)
+
+  const [widthStr, setWidthStr] = useState(String(node?.width ?? 160))
+  const [heightStr, setHeightStr] = useState(String(node?.height ?? 80))
+
+  // Reset local values when the selected node changes
+  useEffect(() => {
+    setWidthStr(String(node?.width ?? 160))
+    setHeightStr(String(node?.height ?? 80))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodeId])
+
   if (!node) return null
 
   const color = node.data.color ?? ""
-  const width = node.width ?? 160
-  const height = node.height ?? 80
+
+  function commitWidth() {
+    const v = Math.max(20, Number(widthStr) || 20)
+    setWidthStr(String(v))
+    updateNode(nodeId, { width: v })
+  }
+
+  function commitHeight() {
+    const v = Math.max(20, Number(heightStr) || 20)
+    setHeightStr(String(v))
+    updateNode(nodeId, { height: v })
+  }
 
   return (
     <div className="absolute top-4 right-4 z-10 w-52 rounded-lg border border-border-default bg-bg-surface p-3 shadow-lg">
@@ -60,8 +82,10 @@ export function NodePropertiesPanel({ nodeId }: NodePropertiesPanelProps) {
               type="number"
               min={20}
               step={10}
-              value={width}
-              onChange={(e) => updateNode(nodeId, { width: Math.max(20, Number(e.target.value)) })}
+              value={widthStr}
+              onChange={(e) => setWidthStr(e.target.value)}
+              onBlur={commitWidth}
+              onKeyDown={(e) => e.key === "Enter" && commitWidth()}
               className="w-full rounded border border-border-default bg-bg-base px-1.5 py-1 text-xs text-copy-primary focus:outline-none focus:border-accent-cyan"
             />
           </label>
@@ -71,8 +95,10 @@ export function NodePropertiesPanel({ nodeId }: NodePropertiesPanelProps) {
               type="number"
               min={20}
               step={10}
-              value={height}
-              onChange={(e) => updateNode(nodeId, { height: Math.max(20, Number(e.target.value)) })}
+              value={heightStr}
+              onChange={(e) => setHeightStr(e.target.value)}
+              onBlur={commitHeight}
+              onKeyDown={(e) => e.key === "Enter" && commitHeight()}
               className="w-full rounded border border-border-default bg-bg-base px-1.5 py-1 text-xs text-copy-primary focus:outline-none focus:border-accent-cyan"
             />
           </label>

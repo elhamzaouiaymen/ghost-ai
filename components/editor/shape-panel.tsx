@@ -28,7 +28,11 @@ function onDragStart(e: React.DragEvent, entry: ShapeEntry) {
   e.dataTransfer.effectAllowed = "copy"
 }
 
-export function ShapePanel() {
+interface ShapePanelProps {
+  onInsert: (payload: ShapeDragPayload) => void
+}
+
+export function ShapePanel({ onInsert }: ShapePanelProps) {
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 rounded-full border border-border-default bg-bg-surface px-3 py-2 shadow-lg">
       {SHAPES.map((entry) => (
@@ -36,7 +40,8 @@ export function ShapePanel() {
           key={entry.shape}
           draggable
           onDragStart={(e) => onDragStart(e, entry)}
-          title={entry.label}
+          onClick={() => onInsert({ shape: entry.shape, width: entry.width, height: entry.height })}
+          title={`${entry.label} — click or drag`}
           className="flex size-8 cursor-grab items-center justify-center rounded-full text-copy-secondary transition-colors hover:bg-bg-elevated hover:text-copy-primary active:cursor-grabbing"
         >
           {entry.icon}
