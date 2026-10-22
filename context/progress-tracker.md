@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Feature 09: complete
+- Feature 12: complete
 
 ## Completed
 
@@ -24,6 +24,12 @@ change.
 - **08-editor-workspace-shell**: `lib/project-access.ts` (getCurrentIdentity + getProjectWithAccess helpers); `components/editor/access-denied.tsx` (centered lock icon, message, link back to /editor); `app/editor/[roomId]/page.tsx` (server component: auth redirect, access check, workspace layout with workspace navbar showing project name + Share/AI toggle placeholders, canvas placeholder, right sidebar placeholder); `ProjectSidebar` updated with `usePathname` to highlight the active project; zero TS errors.
 
 - **09-share-dialog**: `app/api/projects/[projectId]/collaborators/route.ts` (GET list + POST invite + DELETE remove; owner-only write; owner OR collaborator read; Clerk Backend API enrichment with display name + avatar, fallback to email-only); `components/editor/share-dialog.tsx` (owner: invite input + collaborator list with remove + copy-link button with "Copied!" feedback; collaborator: read-only list; fetch on open); `app/editor/[roomId]/workspace-view.tsx` (Share button wired, isOwner + projectId props added); `app/editor/[roomId]/page.tsx` (passes projectId + isOwner); zero TS errors.
+
+- **10-liveblocks-setup**: `@liveblocks/node` installed; `liveblocks.config.ts` updated with Presence (cursor `{ x, y } | null` + `isThinking`) and UserMeta (id, name, avatar, cursorColor); `lib/liveblocks.ts` (cached Liveblocks node client singleton + `getUserColor` deterministic color from 10-color palette); `app/api/liveblocks-auth/route.ts` (POST: Clerk auth required, project access check via `getProjectWithAccess`, `getOrCreateRoom`, session with name/avatar/cursorColor, 403 on unauthorized); zero TS errors.
+
+- **12-shape-panel**: `types/canvas.ts` extended with `CanvasShape` union (rectangle/diamond/circle/pill/cylinder/hexagon), `ShapeDragPayload`; `components/editor/canvas-node.tsx` (basic bordered rectangle renderer with 4 handles, centered label, selected highlight); `components/editor/shape-panel.tsx` (floating pill toolbar bottom-center, 6 draggable icon buttons, drag payload with shape + width + height, sensible default sizes); `collaborative-canvas.tsx` refactored — `useReactFlow()` for `screenToFlowPosition`/`addNodes`, `onDragOver`/`onDrop` handlers, node ID = `{shape}-{timestamp}-{counter}`, `nodeTypes` wired; `canvas-wrapper.tsx` wraps with `ReactFlowProvider`; `yarn build` passes.
+
+- **11-base-canvas**: `react-error-boundary` installed; `types/canvas.ts` (CanvasNodeData with label/color/shape, CanvasNode/CanvasEdge typed aliases); `components/editor/canvas-wrapper.tsx` (LiveblocksProvider + RoomProvider with initialPresence, ErrorBoundary + ClientSideSuspense wrappers); `components/editor/collaborative-canvas.tsx` (useLiveblocksFlow with suspense, empty initial nodes/edges, ReactFlow with Background dots + MiniMap + Cursors, fitView); `workspace-view.tsx` canvas placeholder replaced with CanvasWrapper; `lib/liveblocks.ts` refactored to lazy `getLiveblocks()` to prevent build-time validation failure; `yarn build` passes.
 
 ## In Progress
 
