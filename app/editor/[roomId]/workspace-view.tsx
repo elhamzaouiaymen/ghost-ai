@@ -4,6 +4,7 @@ import * as React from "react"
 import { Share2, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ShareDialog } from "@/components/editor/share-dialog"
+import { CanvasWrapper } from "@/components/editor/canvas-wrapper"
 
 interface WorkspaceViewProps {
   projectId: string
@@ -39,9 +40,9 @@ export function WorkspaceView({ projectId, projectName, isOwner }: WorkspaceView
           </div>
         </div>
 
-        {/* Canvas placeholder */}
-        <div className="canvas-dot-grid flex flex-1 items-center justify-center bg-bg-base">
-          <span className="text-sm text-copy-muted">Canvas placeholder</span>
+        {/* Collaborative canvas */}
+        <div className="flex flex-1 overflow-hidden">
+          <CanvasWrapper roomId={projectId} />
         </div>
       </div>
 

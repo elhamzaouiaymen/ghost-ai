@@ -1,4 +1,4 @@
-"use server"
+export const instant = false
 
 import { redirect } from "next/navigation"
 import { auth } from "@clerk/nextjs/server"
