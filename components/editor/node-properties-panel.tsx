@@ -1,7 +1,35 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useNodes, useReactFlow } from "@xyflow/react"
 import type { CircuitNode } from "@/types/canvas"
+
+function ResistanceInput({ value, onCommit }: { value: number; onCommit: (v: number) => void }) {
+  const [draft, setDraft] = useState(String(value))
+
+  useEffect(() => {
+    setDraft(String(value))
+  }, [value])
+
+  function commit() {
+    const v = Math.max(1, Number(draft) || 1)
+    setDraft(String(v))
+    onCommit(v)
+  }
+
+  return (
+    <input
+      type="number"
+      min={1}
+      step={10}
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => e.key === "Enter" && commit()}
+      className="w-full rounded border border-border-default bg-bg-base px-2 py-1 text-xs text-copy-primary focus:outline-none focus:border-accent-cyan"
+    />
+  )
+}
 
 const LED_COLORS = [
   { label: "Red",    value: "red",    hex: "#ef4444" },
@@ -88,16 +116,9 @@ export function NodePropertiesPanel({ nodeId }: NodePropertiesPanelProps) {
       {type === "resistorNode" && (
         <div className="mb-3">
           <p className="mb-1 text-xs text-copy-muted">Resistance (Ω)</p>
-          <input
-            type="number"
-            min={1}
-            step={10}
+          <ResistanceInput
             value={(node.data as { resistance?: number }).resistance ?? 100}
-            onChange={(e) => {
-              const v = Math.max(1, Number(e.target.value) || 1)
-              updateNodeData(nodeId, { resistance: v })
-            }}
-            className="w-full rounded border border-border-default bg-bg-base px-2 py-1 text-xs text-copy-primary focus:outline-none focus:border-accent-cyan"
+            onCommit={(v) => updateNodeData(nodeId, { resistance: v })}
           />
         </div>
       )}
