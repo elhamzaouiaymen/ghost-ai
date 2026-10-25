@@ -5,7 +5,7 @@ import type { NodeProps } from "@xyflow/react"
 import type { ResistorNode } from "@/types/canvas"
 
 export function ResistorNodeComponent({ data, selected }: NodeProps<ResistorNode>) {
-  const label = data.resistance != null ? `${data.resistance}Ω` : (data.label || "Resistor")
+  const label = data.label || (data.resistance != null ? `${data.resistance}Ω` : "Resistor")
 
   return (
     <div

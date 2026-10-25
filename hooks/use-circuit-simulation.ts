@@ -63,40 +63,55 @@ export function useCircuitSimulation(
       addEdge(`${edge.source}:${srcHandle}`, `${edge.target}:${tgtHandle}`)
     }
 
-    // BFS to label connected components
-    const componentOf = new Map<string, number>()
-    let compId = 0
-    for (const v of adj.keys()) {
-      if (componentOf.has(v)) continue
-      const queue: string[] = [v]
+    // BFS reachability from `start`, optionally excluding one specific edge.
+    function reach(start: string, excludeA?: string, excludeB?: string): Set<string> {
+      const visited = new Set<string>()
+      const queue: string[] = [start]
       while (queue.length > 0) {
         const cur = queue.shift()!
-        if (componentOf.has(cur)) continue
-        componentOf.set(cur, compId)
-        adj.get(cur)?.forEach((n) => {
-          if (!componentOf.has(n)) queue.push(n)
+        if (visited.has(cur)) continue
+        visited.add(cur)
+        adj.get(cur)?.forEach((nb) => {
+          if (
+            (cur === excludeA && nb === excludeB) ||
+            (cur === excludeB && nb === excludeA)
+          )
+            return
+          if (!visited.has(nb)) queue.push(nb)
         })
       }
-      compId++
+      return visited
     }
 
-    // An LED is powered when:
-    //   1. Some battery has both its terminals in the same component (complete loop)
-    //   2. The LED's terminals are also in that component
+    // An LED is powered when there is a path that goes through its internal edge
+    // as part of a complete battery loop.
+    //
+    // Specifically: excluding the LED's own internal edge, battery:right must reach
+    // led:left AND battery:left must reach led:right (or the symmetric pair).
+    // This prevents a dangling-terminal LED from lighting up just because it is
+    // attached to a node that already belongs to a complete loop.
     const poweredIds = new Set<string>()
     const batteries = nodes.filter((n) => n.type === "batteryNode")
     const leds      = nodes.filter((n) => n.type === "ledNode")
 
-    for (const battery of batteries) {
-      const leftComp  = componentOf.get(`${battery.id}:left`)
-      const rightComp = componentOf.get(`${battery.id}:right`)
-      if (leftComp === undefined || rightComp === undefined) continue
-      if (leftComp !== rightComp) continue // incomplete circuit
+    for (const led of leds) {
+      const ledL = `${led.id}:left`
+      const ledR = `${led.id}:right`
 
-      // Complete circuit found — power every LED whose terminals are in it
-      for (const led of leds) {
-        if (componentOf.get(`${led.id}:left`) === leftComp) {
+      for (const battery of batteries) {
+        const batL = `${battery.id}:left`
+        const batR = `${battery.id}:right`
+
+        // Reachability sets computed without the LED's internal edge
+        const fromBatR = reach(batR, ledL, ledR)
+        const fromBatL = reach(batL, ledL, ledR)
+
+        if (
+          (fromBatR.has(ledL) && fromBatL.has(ledR)) ||
+          (fromBatR.has(ledR) && fromBatL.has(ledL))
+        ) {
           poweredIds.add(led.id)
+          break
         }
       }
     }
