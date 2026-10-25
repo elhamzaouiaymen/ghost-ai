@@ -1,18 +1,36 @@
 import type { Node, Edge } from "@xyflow/react"
 
-export type CanvasShape = "rectangle" | "diamond" | "circle" | "pill" | "cylinder" | "hexagon"
+export type ElectricComponentType = "battery" | "switch" | "led" | "resistor"
 
-export interface CanvasNodeData extends Record<string, unknown> {
-  label: string
-  color?: string
-  shape?: CanvasShape
+export interface BatteryData extends Record<string, unknown> {
+  label?: string
 }
 
-export type CanvasNode = Node<CanvasNodeData, "canvasNode">
-export type CanvasEdge = Edge<Record<string, unknown>, "canvasEdge">
+export interface SwitchData extends Record<string, unknown> {
+  label?: string
+  closed: boolean
+}
 
-export interface ShapeDragPayload {
-  shape: CanvasShape
+export interface LedData extends Record<string, unknown> {
+  label?: string
+  color?: string
+}
+
+export interface ResistorData extends Record<string, unknown> {
+  label?: string
+  resistance?: number
+}
+
+export type BatteryNode  = Node<BatteryData,  "batteryNode">
+export type SwitchNode   = Node<SwitchData,   "switchNode">
+export type LedNode      = Node<LedData,      "ledNode">
+export type ResistorNode = Node<ResistorData, "resistorNode">
+
+export type CircuitNode = BatteryNode | SwitchNode | LedNode | ResistorNode
+export type CircuitEdge = Edge<Record<string, unknown>, "wireEdge">
+
+export interface ComponentDragPayload {
+  componentType: ElectricComponentType
   width: number
   height: number
 }
